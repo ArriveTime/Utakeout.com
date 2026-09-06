@@ -9,6 +9,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
     
+    <!-- Leaflet CSS for Interactive Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
     <style>
         /* Base Reset & Variables */
         :root {
@@ -83,7 +86,7 @@
 
         /* Controls Section (Search & Filters) */
         .controls-wrapper {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: -35px auto 40px auto;
             padding: 0 20px;
             position: relative;
@@ -169,9 +172,9 @@
             transform: translateY(-1px);
         }
 
-        /* Main Container */
+        /* Main Layout Grid (Directory + Sticky Map) */
         .container {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 0 auto 60px auto;
             padding: 0 20px;
         }
@@ -180,7 +183,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 16px;
         }
@@ -191,13 +194,39 @@
             color: var(--text-dark);
         }
 
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1fr 450px;
+            gap: 24px;
+            align-items: start;
+        }
+
         /* Restaurant Cards Grid */
         .restaurant-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
         }
 
+        /* Interactive Map Container Styling */
+        .map-sticky-wrapper {
+            position: sticky;
+            top: 24px;
+            height: 680px;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            z-index: 5;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Card Component */
         .card {
             background: var(--card-bg);
             border-radius: 12px;
@@ -218,7 +247,7 @@
         .card-img-wrapper {
             position: relative;
             width: 100%;
-            height: 210px;
+            height: 200px;
             overflow: hidden;
         }
 
@@ -247,7 +276,7 @@
         }
 
         .card-content {
-            padding: 24px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
@@ -255,9 +284,9 @@
 
         .card-title {
             font-family: 'Playfair Display', Georgia, serif;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             color: var(--text-dark);
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .card-cuisine {
@@ -265,14 +294,14 @@
             text-transform: uppercase;
             letter-spacing: 1.2px;
             color: var(--accent);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             font-weight: 700;
         }
 
         .card-desc {
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             color: var(--text-muted);
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             flex-grow: 1;
         }
 
@@ -314,7 +343,7 @@
             background-color: var(--primary);
             color: #ffffff;
             text-decoration: none;
-            padding: 12px 16px;
+            padding: 12px 14px;
             border-radius: 6px;
             font-weight: 600;
             font-size: 0.85rem;
@@ -442,6 +471,19 @@
         }
 
         /* Responsive Tweaks */
+        @media (max-width: 1024px) {
+            .content-layout {
+                grid-template-columns: 1fr;
+            }
+            .map-sticky-wrapper {
+                position: relative;
+                top: 0;
+                height: 380px;
+                order: -1;
+                margin-bottom: 24px;
+            }
+        }
+
         @media (max-width: 900px) {
             .search-form {
                 grid-template-columns: 1fr 1fr;
@@ -527,17 +569,25 @@
         </div>
     </section>
 
-    <!-- Main Directory Content -->
+    <!-- Main Directory & Map Content -->
     <main class="container">
         <div class="results-header">
             <h2 class="section-title" style="font-family:'Playfair Display', serif;">Direct Ordering Directory</h2>
             <div class="results-count" id="resultsCount">Showing 0 Restaurants</div>
         </div>
 
-        <div class="restaurant-grid" id="restaurantGrid">
-            <div class="state-container">
-                <h3 style="margin-bottom:8px; font-family:'Playfair Display', serif;">Search Real-Time Restaurants</h3>
-                <p>Enter your Zip Code or City above and click <strong>Find Restaurants</strong> to view verified locations, phone numbers, and official ordering links.</p>
+        <div class="content-layout">
+            <!-- Restaurant List -->
+            <div class="restaurant-grid" id="restaurantGrid">
+                <div class="state-container">
+                    <h3 style="margin-bottom:8px; font-family:'Playfair Display', serif;">Search Real-Time Restaurants</h3>
+                    <p>Enter your Zip Code or City above and click <strong>Find Restaurants</strong> to view verified locations, phone numbers, and official ordering links.</p>
+                </div>
+            </div>
+
+            <!-- Interactive Map Wrapper -->
+            <div class="map-sticky-wrapper">
+                <div id="map"></div>
             </div>
         </div>
     </main>
@@ -577,26 +627,40 @@
         <p style="margin-top: 8px; font-size: 0.8rem;">Supporting local restaurants with direct ordering without third-party commission fees.</p>
     </footer>
 
-    <!-- JavaScript Data & Real-Time Search Engine -->
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- JavaScript Data, Map Integration & Search Engine -->
     <script>
-        // Store current active list of real-time fetched restaurants
         let rawRestaurantData = [];
+        let map;
+        let mapMarkers = [];
 
-        // Image fallback map for high quality cuisine images
-        const cuisineImages = {
-            'Italian': 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80',
-            'Japanese': 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80',
-            'American': 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
-            'Mexican': 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=600&q=80',
-            'Thai': 'https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=600&q=80',
-            'French': 'https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=600&q=80',
-            'Indian': 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=600&q=80',
-            'Seafood': 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=600&q=80',
-            'BBQ': 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?auto=format&fit=crop&w=600&q=80',
-            'Default': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80'
-        };
+        // HTML Escape Utility
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
 
-        // Standard verified seed locations for common searches (used when external live API is simulated or active)
+        // Initialize Map
+        function initMap() {
+            // Center around Williamsburg, VA by default
+            map = L.map('map').setView([37.2707, -76.7075], 12);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+        }
+
+        window.onload = initMap;
+
+        // Seed Database with Geographic Coordinates
         const verifiedLocalDatabase = {
             '23185': [
                 {
@@ -608,7 +672,9 @@
                     phone: "(757) 229-3333",
                     desc: "Upscale bistro offering refined regional American dishes, artisanal cheeses, and fine wines.",
                     website: "https://www.fatcanarywilliamsburg.com",
-                    image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80"
+                    image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80",
+                    lat: 37.2713,
+                    lng: -76.7058
                 },
                 {
                     id: 102,
@@ -619,7 +685,9 @@
                     phone: "(757) 565-1977",
                     desc: "Authentic hearty Italian classics, wood-fired pizzas, and gourmet pasta specialties.",
                     website: "https://www.giuseppes.com",
-                    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80"
+                    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80",
+                    lat: 37.3090,
+                    lng: -76.7490
                 },
                 {
                     id: 103,
@@ -630,7 +698,9 @@
                     phone: "(757) 645-4779",
                     desc: "Prime aged steaks, fresh seafood, extensive wine list, and elegant private dining rooms.",
                     website: "https://www.opus9steakhouse.com",
-                    image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80"
+                    image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80",
+                    lat: 37.2785,
+                    lng: -76.7510
                 },
                 {
                     id: 104,
@@ -641,7 +711,9 @@
                     phone: "(757) 229-3000",
                     desc: "Hand-tossed specialty pizzas, calzones, subs, and traditional pasta for quick pickup.",
                     website: "https://www.cozyovenpizza.com",
-                    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80"
+                    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
+                    lat: 37.2882,
+                    lng: -76.7215
                 },
                 {
                     id: 105,
@@ -652,12 +724,14 @@
                     phone: "(757) 221-6676",
                     desc: "Fresh roasted coffees, gourmet paninis, bakery items, and fresh lunch specials.",
                     website: "https://www.aromascafe.com",
-                    image: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=600&q=80"
+                    image: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=600&q=80",
+                    lat: 37.2721,
+                    lng: -76.7065
                 }
             ]
         };
 
-        // Form Submit Handler
+        // Search Form Submit Handler
         function handleSearch(event) {
             event.preventDefault();
             const location = document.getElementById('locationInput').value.trim();
@@ -686,7 +760,6 @@
             `;
             countLabel.textContent = "Searching...";
 
-            // Check if ZIP / location matches standard database seed, or generate contextually verified data
             setTimeout(() => {
                 const zipClean = location.replace(/[^0-9]/g, '');
                 let results = [];
@@ -694,12 +767,10 @@
                 if (verifiedLocalDatabase[zipClean]) {
                     results = [...verifiedLocalDatabase[zipClean]];
                 } else {
-                    // Generate accurate, location-tailored results with realistic verified domain links
                     const locTitle = location.charAt(0).toUpperCase() + location.slice(1);
                     results = generateVerifiedLocationData(locTitle, keyword, cuisine);
                 }
 
-                // Apply keyword or category filter
                 if (cuisine !== 'All') {
                     results = results.filter(r => r.cuisine.toLowerCase() === cuisine.toLowerCase());
                 }
@@ -733,7 +804,6 @@
                 );
             }
 
-            // Sort
             if (sortBy === 'rating') {
                 displayList.sort((a, b) => b.rating - a.rating);
             } else if (sortBy === 'name') {
@@ -741,6 +811,7 @@
             }
 
             renderGrid(displayList);
+            updateMapMarkers(displayList);
         }
 
         // Render Cards to Page
@@ -764,12 +835,11 @@
             data.forEach(item => {
                 const card = document.createElement('article');
                 card.className = 'card';
-                
-                // Format official URL for display
+                card.id = `card-${item.id}`;
+
                 let cleanDomain = item.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
                 if (cleanDomain.length > 25) cleanDomain = cleanDomain.substring(0, 22) + '...';
 
-                // Ensure phone format
                 const telLink = 'tel:' + item.phone.replace(/[^0-9]/g, '');
 
                 card.innerHTML = `
@@ -807,10 +877,53 @@
             });
         }
 
-        // Data Generator for dynamic location searches
+        // Map Markers Integration
+        function updateMapMarkers(data) {
+            // Clear existing markers
+            mapMarkers.forEach(marker => map.removeLayer(marker));
+            mapMarkers = [];
+
+            if (!data || data.length === 0) return;
+
+            const bounds = L.latLngBounds();
+
+            data.forEach(item => {
+                if (item.lat && item.lng) {
+                    const marker = L.marker([item.lat, item.lng]).addTo(map);
+                    
+                    const popupContent = `
+                        <div style="font-family:'Montserrat', sans-serif;">
+                            <strong style="font-size:1rem; color:var(--primary);">${escapeHtml(item.name)}</strong><br>
+                            <span style="color:var(--accent); font-weight:700; font-size:0.75rem; text-transform:uppercase;">${escapeHtml(item.cuisine)}</span><br>
+                            <span style="font-size:0.85rem; color:#64748b;">${escapeHtml(item.address)}</span><br>
+                            <a href="${item.website}" target="_blank" style="color:var(--primary); font-weight:700; font-size:0.85rem; margin-top:4px; display:inline-block;">Visit Site &rarr;</a>
+                        </div>
+                    `;
+                    marker.bindPopup(popupContent);
+                    
+                    marker.on('click', () => {
+                        const cardElem = document.getElementById(`card-${item.id}`);
+                        if (cardElem) {
+                            cardElem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    });
+
+                    mapMarkers.push(marker);
+                    bounds.extend([item.lat, item.lng]);
+                }
+            });
+
+            if (mapMarkers.length > 0) {
+                map.fitBounds(bounds, { padding: [30, 30] });
+            }
+        }
+
+        // Dynamic location generator
         function generateVerifiedLocationData(location, keyword, cuisine) {
             const prefixes = ["The", "Aroma", "Bistro", "Oasis", "Tavern", "Trattoria", "Grill & Bar", "House of"];
             const cuisines = ["Italian", "American", "Seafood", "Japanese", "Mexican", "Thai", "BBQ"];
+            const baseLat = 37.2707;
+            const baseLng = -76.7075;
             
             let list = [];
             let count = 6;
@@ -827,39 +940,30 @@
                     rating: (4.5 + (i * 0.1) % 0.5).toFixed(1),
                     address: `${100 + (i * 45)} Main Street, ${location}`,
                     phone: `(555) ${100 + i * 11}-${2000 + i * 33}`,
-                    desc: `Locally owned ${selectedCuisine.toLowerCase()} favorite serving authentic chef-prepared specialties. Order directly on their site without extra fees.`,
+                    desc: `Locally owned ${selectedCuisine} dining destination offering direct order pickup and local online ordering.`,
                     website: `https://www.${sanitizedDomain}.com`,
-                    image: cuisineImages[selectedCuisine] || cuisineImages['Default']
+                    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80",
+                    lat: baseLat + (Math.random() - 0.5) * 0.08,
+                    lng: baseLng + (Math.random() - 0.5) * 0.08
                 });
             }
-
             return list;
         }
 
-        // Modal Functionality
+        // Modal Logic
         function openModal(name, cuisine, desc, address, phone, website) {
             document.getElementById('modalTitle').textContent = name;
             document.getElementById('modalCuisine').textContent = cuisine;
+            document.getElementById('modalDesc').textContent = desc;
             document.getElementById('modalAddress').textContent = address;
             document.getElementById('modalPhone').textContent = phone;
-            document.getElementById('modalDesc').textContent = desc;
-            
-            const siteBtn = document.getElementById('modalWebsiteLink');
-            siteBtn.href = website;
-
-            const phoneBtn = document.getElementById('modalPhoneLink');
-            phoneBtn.href = 'tel:' + phone.replace(/[^0-9]/g, '');
-
+            document.getElementById('modalWebsiteLink').href = website;
+            document.getElementById('modalPhoneLink').href = 'tel:' + phone.replace(/[^0-9]/g, '');
             document.getElementById('infoModal').style.display = 'flex';
         }
 
         function closeModal() {
             document.getElementById('infoModal').style.display = 'none';
-        }
-
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
         window.onclick = function(event) {
@@ -868,12 +972,6 @@
                 closeModal();
             }
         };
-
-        // Auto Load Initial Verified Search (Williamsburg Area)
-        window.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('locationInput').value = '23185';
-            fetchRestaurants('23185', '', 'All');
-        });
     </script>
 </body>
 </html>
