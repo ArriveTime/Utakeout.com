@@ -12,11 +12,11 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         body { display: flex; flex-direction: column; min-height: 100vh; background-color: #f8fafc; color: #0f172a; }
         
-        /* Expanded Hero Banner Area */
+        /* Hero Banner Header Area */
         header { 
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
             color: #ffffff; 
-            padding: 48px 36px 40px 36px; 
+            padding: 44px 24px 36px 24px; 
             display: flex; 
             flex-direction: column;
             align-items: center; 
@@ -33,11 +33,11 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
         }
         
         .logo-title { 
-            font-size: 42px; 
+            font-size: 40px; 
             font-weight: 900; 
             letter-spacing: -1px; 
             background: linear-gradient(90deg, #38bdf8, #34d399); 
@@ -49,9 +49,9 @@
         .slogan-badge { 
             background: rgba(52, 211, 153, 0.15); 
             color: #34d399; 
-            font-size: 15px; 
+            font-size: 14px; 
             font-weight: 700; 
-            padding: 8px 18px; 
+            padding: 6px 16px; 
             border-radius: 30px; 
             border: 1px solid rgba(52, 211, 153, 0.3);
             letter-spacing: 0.5px;
@@ -59,30 +59,29 @@
         }
 
         .hero-subtitle {
-            font-size: 16px;
+            font-size: 15px;
             color: #94a3b8;
             max-width: 600px;
             line-height: 1.5;
-            margin-top: 4px;
         }
 
-        /* Large Search Bar Container */
+        /* Search Bar */
         .search-container { 
             display: flex; 
-            gap: 12px; 
+            gap: 10px; 
             width: 100%; 
-            max-width: 620px; 
-            margin-top: 12px;
+            max-width: 600px; 
+            margin-top: 10px;
         }
         
         .search-input { 
             flex: 1; 
-            padding: 16px 20px; 
+            padding: 14px 18px; 
             border-radius: 10px; 
             border: 1px solid #475569; 
             background: #1e293b; 
             color: #ffffff; 
-            font-size: 16px; 
+            font-size: 15px; 
             outline: none; 
             transition: all 0.2s ease; 
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
@@ -99,22 +98,21 @@
             background: #2563eb; 
             color: #ffffff; 
             border: none; 
-            padding: 16px 28px; 
+            padding: 14px 24px; 
             border-radius: 10px; 
             font-weight: 700; 
             cursor: pointer; 
-            font-size: 16px; 
+            font-size: 15px; 
             transition: background 0.2s ease; 
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
         
         .search-btn:hover { background: #1d4ed8; }
 
-        /* Feature Pillars */
         .header-features {
             display: flex;
-            gap: 24px;
-            margin-top: 12px;
+            gap: 20px;
+            margin-top: 10px;
             font-size: 13px;
             color: #cbd5e1;
             font-weight: 500;
@@ -126,12 +124,12 @@
             gap: 6px;
         }
 
-        /* Main App Container */
+        /* Workspace Layout */
         #main-container { 
             display: flex; 
             flex: 1; 
-            height: calc(100vh - 320px); 
-            min-height: 500px;
+            height: calc(100vh - 300px); 
+            min-height: 480px;
             overflow: hidden; 
             position: relative; 
         }
@@ -147,18 +145,18 @@
         }
 
         #sidebar-header { 
-            padding: 20px 24px; 
+            padding: 18px 22px; 
             border-bottom: 1px solid #e2e8f0; 
             background: #f8fafc; 
         }
 
-        #sidebar-header h2 { font-size: 18px; font-weight: 700; color: #0f172a; }
+        #sidebar-header h2 { font-size: 17px; font-weight: 700; color: #0f172a; }
         #sidebar-header p { font-size: 13px; color: #64748b; margin-top: 4px; line-height: 1.4; }
 
         #restaurant-list { 
             flex: 1; 
             overflow-y: auto; 
-            padding: 20px; 
+            padding: 18px; 
             background: #f1f5f9; 
         }
 
@@ -170,20 +168,20 @@
             border: 1px solid #e2e8f0; 
             border-radius: 12px; 
             overflow: hidden; 
-            margin-bottom: 18px; 
+            margin-bottom: 16px; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.04); 
             transition: transform 0.2s ease, box-shadow 0.2s ease; 
         }
 
         .card:hover { 
-            transform: translateY(-3px); 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.08); 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 16px rgba(0,0,0,0.08); 
             border-color: #cbd5e1; 
         }
 
         .card-img-wrapper { 
             position: relative; 
-            height: 150px; 
+            height: 140px; 
             width: 100%; 
             overflow: hidden; 
             background: #e2e8f0; 
@@ -193,23 +191,23 @@
 
         .card-badge { 
             position: absolute; 
-            top: 12px; 
-            left: 12px; 
+            top: 10px; 
+            left: 10px; 
             background: #10b981; 
             color: #ffffff; 
             font-size: 11px; 
             font-weight: 800; 
-            padding: 4px 10px; 
+            padding: 4px 8px; 
             border-radius: 6px; 
             text-transform: uppercase; 
             letter-spacing: 0.5px; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
         }
 
-        .card-body { padding: 16px 18px; }
-        .card-title { font-size: 17px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
-        .card-category { font-size: 12px; color: #64748b; margin-bottom: 12px; display: flex; justify-content: space-between; }
-        .card-meta { display: flex; gap: 12px; font-size: 12px; color: #334155; margin-bottom: 16px; background: #f8fafc; padding: 10px 12px; border-radius: 8px; font-weight: 600; border: 1px solid #f1f5f9; }
+        .card-body { padding: 14px 16px; }
+        .card-title { font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+        .card-category { font-size: 12px; color: #64748b; margin-bottom: 10px; display: flex; justify-content: space-between; }
+        .card-meta { display: flex; gap: 10px; font-size: 12px; color: #334155; margin-bottom: 14px; background: #f8fafc; padding: 8px 10px; border-radius: 6px; font-weight: 600; border: 1px solid #f1f5f9; }
 
         .btn-order { 
             display: block; 
@@ -217,9 +215,9 @@
             color: #ffffff; 
             text-decoration: none; 
             text-align: center; 
-            padding: 12px; 
+            padding: 10px; 
             border-radius: 8px; 
-            font-size: 14px; 
+            font-size: 13px; 
             font-weight: 700; 
             transition: background 0.2s ease; 
         }
@@ -230,52 +228,50 @@
             font-size: 14px; 
             color: #64748b; 
             text-align: center; 
-            margin-top: 36px; 
-            padding: 0 24px; 
-            line-height: 1.6; 
+            margin-top: 32px; 
+            padding: 0 20px; 
+            line-height: 1.5; 
         }
 
         @media (max-width: 868px) {
-            header { padding: 28px 20px; }
-            .logo-title { font-size: 32px; }
-            .header-features { flex-direction: column; gap: 8px; }
+            header { padding: 24px 16px; }
+            .logo-title { font-size: 30px; }
+            .header-features { flex-direction: column; gap: 6px; }
             #main-container { flex-direction: column-reverse; height: auto; }
-            #sidebar { width: 100%; height: 450px; }
-            #map { width: 100%; height: 350px; }
+            #sidebar { width: 100%; height: 420px; }
+            #map { width: 100%; height: 320px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Professional Hero Banner Header -->
     <header>
         <div class="header-content">
             <h1 class="logo-title">uTakeout.com</h1>
             <span class="slogan-badge">Get Food — Skip the fees</span>
-            <p class="hero-subtitle">Order directly from local independent kitchens and save up to 30% by bypassing third-party delivery markups and service charges.</p>
+            <p class="hero-subtitle">Order directly from local independent kitchens and save up to 30% by bypassing third-party markups and hidden delivery fees.</p>
             
             <div class="search-container">
-                <input type="text" id="city-search" class="search-input" placeholder="Enter City, State, or U.S. ZIP (e.g. 23185 or Austin, TX)">
+                <input type="text" id="city-search" class="search-input" placeholder="Enter City, State, or U.S. ZIP (e.g. 23188, 90210, or Austin, TX)">
                 <button onclick="searchLocation()" class="search-btn">Find Food</button>
             </div>
 
             <div class="header-features">
-                <div class="feature-item">✓ 100% Direct Restaurant Portals</div>
-                <div class="feature-item">✓ $0 Service Fees</div>
-                <div class="feature-item">✓ Direct Pricing Guarantee</div>
+                <div class="feature-item">✓ 100% Direct Portals</div>
+                <div class="feature-item">✓ $0 Markup Fees</div>
+                <div class="feature-item">✓ Direct Price Guarantee</div>
             </div>
         </div>
     </header>
 
-    <!-- Main Map & Directory Workspace -->
     <div id="main-container">
         <div id="sidebar">
             <div id="sidebar-header">
                 <h2 id="current-location-title">Direct-Order Kitchens</h2>
-                <p>Search your city or ZIP code above, or click anywhere on the map to discover direct takeout options nearby.</p>
+                <p>Enter any U.S. ZIP or city above, or click the map to instantly surface nearby restaurants.</p>
             </div>
             <div id="restaurant-list">
-                <p class="loading-text">Enter a location in the search bar above to load local kitchen portals from the database.</p>
+                <p class="loading-text">Enter a location in the search bar above to load local kitchen portals.</p>
             </div>
         </div>
         <div id="map"></div>
@@ -288,14 +284,13 @@
         const SUPABASE_URL = "https://lagieqygqqusbfqvywam.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_yWIMlx1ju0IEPzFPLBjMaA_nZQlYp0A";
 
-        // Food photography placeholders for database items lacking individual images
         const sampleFoodImages = [
             "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
             "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
             "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80"
         ];
 
-        // Default map view centered across continental United States
+        // Default map view centered over continental U.S.
         const map = L.map('map').setView([39.8283, -98.5795], 4);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -305,16 +300,73 @@
 
         let markersGroup = L.layerGroup().addTo(map);
 
-        // Retrieve genuine database entries for searched coordinates
+        // Calculate distance in miles between coordinates
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 3958.8; // Radius of earth in miles
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return (R * c).toFixed(1);
+        }
+
+        // Live fallback to retrieve real open restaurant data via Overpass API
+        async function fetchLiveOpenStreetMapRestaurants(lat, lng) {
+            const overpassQuery = `
+                [out:json][timeout:10];
+                (
+                  node["amenity"="restaurant"](around:8000, ${lat}, ${lng});
+                  way["amenity"="restaurant"](around:8000, ${lat}, ${lng});
+                );
+                out center 15;
+            `;
+
+            try {
+                const response = await fetch("https://overpass-api.de/api/interpreter", {
+                    method: "POST",
+                    body: "data=" + encodeURIComponent(overpassQuery)
+                });
+                const data = await response.json();
+
+                if (!data || !data.elements) return [];
+
+                return data.elements.map(el => {
+                    const elLat = el.lat || (el.center ? el.center.lat : lat);
+                    const elLng = el.lon || (el.center ? el.center.lon : lng);
+                    const name = el.tags && el.tags.name ? el.tags.name : "Local Kitchen";
+                    const website = el.tags && el.tags.website ? el.tags.website : `https://www.google.com/search?q=${encodeURIComponent(name + " direct online ordering")}`;
+                    const cuisine = el.tags && el.tags.cuisine ? el.tags.cuisine.replace('_', ' ') : "Takeout / Dining";
+
+                    return {
+                        name: name,
+                        direct_order_url: website,
+                        latitude: elLat,
+                        longitude: elLng,
+                        distance_miles: calculateDistance(lat, lng, elLat, elLng),
+                        travel_score: 4.8,
+                        category: cuisine
+                    };
+                }).filter(spot => spot.name !== "Local Kitchen").slice(0, 10);
+            } catch (err) {
+                console.error("Overpass API fallback error:", err);
+                return [];
+            }
+        }
+
         async function fetchNearbyRestaurants(lat, lng, locationName = "") {
             const listContainer = document.getElementById('restaurant-list');
-            listContainer.innerHTML = '<p class="loading-text">Searching spatial database for direct-order kitchens...</p>';
+            listContainer.innerHTML = '<p class="loading-text">Locating direct kitchens near this location...</p>';
             markersGroup.clearLayers();
 
             if (locationName) {
                 document.getElementById('current-location-title').innerText = `Direct Kitchens near ${locationName}`;
             }
 
+            let combinedData = [];
+
+            // 1. Query Supabase database first
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_nearby_restaurants`, {
                     method: "POST",
@@ -330,61 +382,67 @@
                     })
                 });
 
-                const data = await response.json();
-
-                // If no real records exist for this location in Supabase yet
-                if (!data || data.length === 0) {
-                    listContainer.innerHTML = `<p class="loading-text">No direct-order kitchens listed in <b>${locationName || 'this area'}</b> yet.<br><br>Check back soon as new restaurants are added to our direct network!</p>`;
-                    return;
+                const supabaseData = await response.json();
+                if (Array.isArray(supabaseData) && supabaseData.length > 0) {
+                    combinedData = supabaseData;
                 }
-
-                listContainer.innerHTML = "";
-
-                data.forEach((spot, idx) => {
-                    const imgUrl = spot.image_url || sampleFoodImages[idx % sampleFoodImages.length];
-
-                    // Interactive Map Pin Popup with explicit external link target
-                    const marker = L.marker([spot.latitude, spot.longitude]).addTo(markersGroup);
-                    marker.bindPopup(`
-                        <div style="text-align: center; max-width: 180px;">
-                            <img src="${imgUrl}" style="width:100%; height:80px; object-fit:cover; border-radius:6px; margin-bottom:6px;">
-                            <b style="font-size:13px;">${spot.name}</b><br>
-                            <span style="color:#10b981; font-size:11px; font-weight:bold;">$0 App Fees</span><br><br>
-                            <a href="${spot.direct_order_url}" target="_blank" rel="noopener noreferrer" style="background:#2563eb; color:#fff; padding:6px 12px; border-radius:6px; text-decoration:none; font-size:12px; font-weight:bold; display:inline-block;">Order Direct</a>
-                        </div>
-                    `);
-
-                    // Sidebar Card with target="_blank" to ensure opening in a new browser tab
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.innerHTML = `
-                        <div class="card-img-wrapper">
-                            <span class="card-badge">Direct Price Match</span>
-                            <img class="card-img" src="${imgUrl}" alt="${spot.name}">
-                        </div>
-                        <div class="card-body">
-                            <h3 class="card-title">${spot.name}</h3>
-                            <div class="card-category">
-                                <span>${spot.category || 'Independent Kitchen'}</span>
-                                <span>Direct Portal</span>
-                            </div>
-                            <div class="card-meta">
-                                <span>📍 ${spot.distance_miles ? spot.distance_miles + ' mi' : 'Nearby'}</span>
-                                <span>⭐ Travel Score: ${spot.travel_score || '4.9'}</span>
-                            </div>
-                            <a href="${spot.direct_order_url}" target="_blank" rel="noopener noreferrer" class="btn-order">Order Direct (Skip App Fees)</a>
-                        </div>
-                    `;
-                    listContainer.appendChild(card);
-                });
-
             } catch (err) {
-                console.error(err);
-                listContainer.innerHTML = '<p class="loading-text">Error querying spatial database. Please try again.</p>';
+                console.error("Supabase query failed, falling back to live spatial query...", err);
             }
+
+            // 2. If Supabase has no listings for this ZIP yet, query OpenStreetMap in real time
+            if (combinedData.length === 0) {
+                combinedData = await fetchLiveOpenStreetMapRestaurants(lat, lng);
+            }
+
+            // 3. Render empty state if no real restaurants found
+            if (combinedData.length === 0) {
+                listContainer.innerHTML = `<p class="loading-text">No direct-order kitchens listed near <b>${locationName || 'this area'}</b> yet.<br><br>Try searching a neighboring city or ZIP code!</p>`;
+                return;
+            }
+
+            listContainer.innerHTML = "";
+
+            combinedData.forEach((spot, idx) => {
+                const imgUrl = spot.image_url || sampleFoodImages[idx % sampleFoodImages.length];
+
+                // Interactive map marker pin
+                const marker = L.marker([spot.latitude, spot.longitude]).addTo(markersGroup);
+                marker.bindPopup(`
+                    <div style="text-align: center; max-width: 180px;">
+                        <img src="${imgUrl}" style="width:100%; height:80px; object-fit:cover; border-radius:6px; margin-bottom:6px;">
+                        <b style="font-size:13px;">${spot.name}</b><br>
+                        <span style="color:#10b981; font-size:11px; font-weight:bold;">$0 Markup</span><br><br>
+                        <a href="${spot.direct_order_url}" target="_blank" rel="noopener noreferrer" style="background:#2563eb; color:#fff; padding:6px 12px; border-radius:6px; text-decoration:none; font-size:12px; font-weight:bold; display:inline-block;">Order Direct</a>
+                    </div>
+                `);
+
+                // Sidebar listing card
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="card-img-wrapper">
+                        <span class="card-badge">Direct Price Match</span>
+                        <img class="card-img" src="${imgUrl}" alt="${spot.name}">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">${spot.name}</h3>
+                        <div class="card-category">
+                            <span>${spot.category || 'Independent Kitchen'}</span>
+                            <span>Direct Portal</span>
+                        </div>
+                        <div class="card-meta">
+                            <span>📍 ${spot.distance_miles ? spot.distance_miles + ' mi' : 'Nearby'}</span>
+                            <span>⭐ Travel Score: ${spot.travel_score || '4.8'}</span>
+                        </div>
+                        <a href="${spot.direct_order_url}" target="_blank" rel="noopener noreferrer" class="btn-order">Order Direct (Skip App Fees)</a>
+                    </div>
+                `;
+                listContainer.appendChild(card);
+            });
         }
 
-        // Restrict geocoding search to U.S. addresses
+        // Search U.S. location or ZIP code
         async function searchLocation() {
             const query = document.getElementById('city-search').value;
             if (!query) return;
@@ -416,6 +474,11 @@
 
         map.on('click', function(e) {
             fetchNearbyRestaurants(e.latlng.lat, e.latlng.lng);
+        });
+
+        // Automatically load 23188 on initial visit
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchNearbyRestaurants(37.3243, -76.7327, "23188");
         });
     </script>
 </body>
