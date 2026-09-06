@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>uTakeout.com - Order Direct & Save</title>
+    <title>uTakeout.com - Order Direct Nationwide</title>
 
     <!-- Leaflet Map CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -11,9 +11,16 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         body { display: flex; flex-direction: column; height: 100vh; background-color: #f3f4f6; }
-        header { background: #111827; color: #ffffff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
-        header span { font-size: 13px; color: #10b981; font-weight: 600; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 20px; }
+        header { background: #111827; color: #ffffff; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex-wrap: wrap; gap: 10px; }
+        header h1 { font-size: 20px; font-weight: 700; }
+        
+        /* Search Box Styles */
+        .search-container { display: flex; gap: 8px; flex: 1; max-width: 450px; }
+        .search-input { flex: 1; padding: 8px 12px; border-radius: 6px; border: 1px solid #374151; background: #1f2937; color: #fff; font-size: 14px; outline: none; }
+        .search-input::placeholder { color: #9ca3af; }
+        .search-btn { background: #2563eb; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px; }
+        .search-btn:hover { background: #1d4ed8; }
+
         #main-container { display: flex; flex: 1; overflow: hidden; }
         #sidebar { width: 380px; background: #ffffff; border-right: 1px solid #e5e7eb; display: flex; flex-direction: column; z-index: 10; }
         #sidebar-header { padding: 16px; border-bottom: 1px solid #e5e7eb; background: #fafafa; }
@@ -21,14 +28,11 @@
         #sidebar-header p { font-size: 12px; color: #6b7280; margin-top: 4px; }
         #restaurant-list { flex: 1; overflow-y: auto; padding: 16px; }
         #map { flex: 1; height: 100%; }
-        .card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: transform 0.15s ease; }
-        .card:hover { transform: translateY(-2px); border-color: #d1d5db; }
+        .card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .card h3 { font-size: 16px; color: #111827; margin-bottom: 6px; }
-        .card .address { font-size: 12px; color: #6b7280; margin-bottom: 10px; }
         .card .details { display: flex; gap: 12px; font-size: 12px; color: #374151; margin-bottom: 12px; background: #f9fafb; padding: 8px; border-radius: 6px; }
         .card .btn { display: block; background: #2563eb; color: #ffffff; text-decoration: none; text-align: center; padding: 10px; border-radius: 6px; font-size: 13px; font-weight: 600; }
-        .card .btn:hover { background: #1d4ed8; }
-        .badge { display: inline-block; background: #dcfce7; color: #15803d; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; text-transform: uppercase; }
+        .badge { display: inline-block; background: #dcfce7; color: #15803d; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; }
         .loading-text { font-size: 13px; color: #6b7280; text-align: center; margin-top: 20px; }
         @media (max-width: 768px) {
             #main-container { flex-direction: column-reverse; }
@@ -41,17 +45,20 @@
 
     <header>
         <h1>uTakeout.com</h1>
-        <span>Zero App Fees</span>
+        <div class="search-container">
+            <input type="text" id="city-search" class="search-input" placeholder="Enter City, State, or ZIP (e.g. Austin, TX)">
+            <button onclick="searchLocation()" class="search-btn">Search</button>
+        </div>
     </header>
 
     <div id="main-container">
         <div id="sidebar">
             <div id="sidebar-header">
-                <h2>Direct Ordering Kitchens</h2>
-                <p>Click anywhere on the map to search nearby restaurants.</p>
+                <h2 id="current-location-title">Direct Ordering Kitchens</h2>
+                <p>Enter a city above or click anywhere on the map to search.</p>
             </div>
             <div id="restaurant-list">
-                <p class="loading-text">Loading nearby restaurants...</p>
+                <p class="loading-text">Use the search bar above to find restaurants in any U.S. city.</p>
             </div>
         </div>
         <div id="map"></div>
@@ -61,14 +68,12 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
-        // YOUR CONNECTED SUPABASE CREDENTIALS
         const SUPABASE_URL = "https://lagieqygqqusbfqvywam.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_yWIMlx1ju0IEPzFPLBjMaA_nZQlYp0A";
 
-        // Initialize Map centered on Williamsburg, VA Area
-        const map = L.map('map').setView([37.2707, -76.7075], 12);
+        // Default map view centered on U.S.
+        const map = L.map('map').setView([39.8283, -98.5795], 4);
 
-        // OpenStreetMap Layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap contributors'
@@ -76,11 +81,15 @@
 
         let markersGroup = L.layerGroup().addTo(map);
 
-        // Function to Query Supabase PostGIS Database
-        async function fetchNearbyRestaurants(lat, lng) {
+        // Fetch restaurants from Supabase based on Lat/Lng
+        async function fetchNearbyRestaurants(lat, lng, locationName = "") {
             const listContainer = document.getElementById('restaurant-list');
             listContainer.innerHTML = '<p class="loading-text">Searching database...</p>';
             markersGroup.clearLayers();
+
+            if (locationName) {
+                document.getElementById('current-location-title').innerText = `Kitchens near ${locationName}`;
+            }
 
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_nearby_restaurants`, {
@@ -93,7 +102,7 @@
                     body: JSON.stringify({
                         user_lat: lat,
                         user_lng: lng,
-                        distance_meters: 16093.4 // 10 mile search radius
+                        distance_meters: 16093.4 // 10 mile radius
                     })
                 });
 
@@ -101,12 +110,11 @@
                 listContainer.innerHTML = "";
 
                 if (!data || data.length === 0) {
-                    listContainer.innerHTML = '<p class="loading-text">No direct-order spots found within 10 miles of this point.</p>';
+                    listContainer.innerHTML = '<p class="loading-text">No direct-order spots found in this area yet.</p>';
                     return;
                 }
 
                 data.forEach(spot => {
-                    // Drop Marker on Interactive Map
                     const marker = L.marker([spot.latitude, spot.longitude]).addTo(markersGroup);
                     marker.bindPopup(`
                         <div style="text-align: center;">
@@ -116,7 +124,6 @@
                         </div>
                     `);
 
-                    // Render Restaurant Card in Sidebar
                     const card = document.createElement('div');
                     card.className = 'card';
                     card.innerHTML = `
@@ -132,18 +139,47 @@
                 });
 
             } catch (err) {
-                console.error("Supabase Connection Error:", err);
-                listContainer.innerHTML = '<p class="loading-text">Unable to load listings. Check API configuration.</p>';
+                console.error(err);
+                listContainer.innerHTML = '<p class="loading-text">Error querying database.</p>';
             }
         }
 
-        // Trigger Spatial Search when User Clicks the Map
+        // City Search via OpenStreetMap Geocoding API
+        async function searchLocation() {
+            const query = document.getElementById('city-search').value;
+            if (!query) return;
+
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+                const results = await res.json();
+
+                if (results && results.length > 0) {
+                    const lat = parseFloat(results[0].lat);
+                    const lon = parseFloat(results[0].lon);
+                    
+                    // Zoom map to target city
+                    map.setView([lat, lon], 12);
+                    
+                    // Fetch restaurants from Supabase for those coordinates
+                    fetchNearbyRestaurants(lat, lon, results[0].display_name.split(',')[0]);
+                } else {
+                    alert('City or ZIP code not found. Please try again.');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Search service unavailable. Click directly on the map to search.');
+            }
+        }
+
+        // Allow pressing "Enter" in search bar
+        document.getElementById('city-search').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') searchLocation();
+        });
+
+        // Search when map is clicked anywhere
         map.on('click', function(e) {
             fetchNearbyRestaurants(e.latlng.lat, e.latlng.lng);
         });
-
-        // Initial Search around Williamsburg Center on First Load
-        fetchNearbyRestaurants(37.2707, -76.7075);
     </script>
 </body>
 </html>
