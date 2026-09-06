@@ -233,6 +233,111 @@
             line-height: 1.5; 
         }
 
+        /* Footer Disclaimers Section */
+        footer {
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 24px 36px;
+            font-size: 11px;
+            line-height: 1.6;
+            border-top: 1px solid #1e293b;
+        }
+
+        .disclaimer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .disclaimer-title {
+            color: #cbd5e1;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .footer-bottom {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #1e293b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-link {
+            color: #334155;
+            text-decoration: none;
+            font-size: 11px;
+        }
+        .admin-link:hover { color: #64748b; }
+
+        /* Hidden Admin Analytics Modal */
+        #admin-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-box {
+            background: #ffffff;
+            width: 90%;
+            max-width: 850px;
+            max-height: 85vh;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 16px;
+        }
+
+        .admin-title { font-size: 18px; font-weight: 800; color: #0f172a; }
+        .close-btn { cursor: pointer; font-size: 20px; font-weight: 700; color: #64748b; }
+
+        .analytics-table-wrapper {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        table.analytics-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        table.analytics-table th {
+            background: #f8fafc;
+            padding: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            color: #475569;
+            font-weight: 700;
+        }
+
+        table.analytics-table td {
+            padding: 10px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #334155;
+        }
+
         @media (max-width: 868px) {
             header { padding: 24px 16px; }
             .logo-title { font-size: 30px; }
@@ -240,6 +345,7 @@
             #main-container { flex-direction: column-reverse; height: auto; }
             #sidebar { width: 100%; height: 420px; }
             #map { width: 100%; height: 320px; }
+            footer { padding: 20px 16px; }
         }
     </style>
 </head>
@@ -277,12 +383,61 @@
         <div id="map"></div>
     </div>
 
+    <!-- Mandatory Footer Disclaimers -->
+    <footer>
+        <div class="disclaimer-container">
+            <div>
+                <p class="disclaimer-title">Third-Party Information & Fee-Free Disclaimer</p>
+                <p>uTakeout.com operates strictly as an independent third-party directory guide linking consumers directly to restaurant-owned ordering portals. uTakeout.com does not accept commissions, collect service markup fees, or process transactions on behalf of listed establishments.</p>
+            </div>
+            <div>
+                <p class="disclaimer-title">Food Safety, Health & Liability Disclaimer</p>
+                <p>uTakeout.com does not endorse, partner with, or guarantee the food quality, preparation standards, or sanitation practices of any listed kitchen. Consumers assume full responsibility when ordering food products. Please exercise caution, inspect all items prior to consumption, and communicate directly with food preparation staff regarding allergies or health concerns. uTakeout.com is not liable for illness, foodborne illness, or service disputes arising from restaurant orders.</p>
+            </div>
+            <div>
+                <p class="disclaimer-title">Privacy Policy</p>
+                <p>We respect user privacy. General connection metadata (including approximate geolocation and browser IP details) may be logged securely for real-time site operational analytics, security auditing, and fraud prevention. We never sell, lease, or distribute visitor logs to third parties.</p>
+            </div>
+            <div class="footer-bottom">
+                <p>© uTakeout.com — All Rights Reserved.</p>
+                <a href="javascript:void(0)" onclick="openAdminPortal()" class="admin-link">System Admin</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Hidden Analytics Modal for Password-Protected Access -->
+    <div id="admin-modal">
+        <div class="admin-box">
+            <div class="admin-header">
+                <span class="admin-title">Real-Time Visitor Log Dashboard</span>
+                <span class="close-btn" onclick="closeAdminPortal()">✕</span>
+            </div>
+            <div class="analytics-table-wrapper">
+                <table class="analytics-table">
+                    <thead>
+                        <tr>
+                            <th>Date / Time</th>
+                            <th>IP Address</th>
+                            <th>City</th>
+                            <th>State</th>
+                            <th>Country</th>
+                        </tr>
+                    </thead>
+                    <tbody id="analytics-log-rows">
+                        <!-- Visitor logs render dynamically here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <!-- Leaflet JS Engine -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
         const SUPABASE_URL = "https://lagieqygqqusbfqvywam.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_yWIMlx1ju0IEPzFPLBjMaA_nZQlYp0A";
+        const ADMIN_PASS = "admin123"; // You can customize this password
 
         const sampleFoodImages = [
             "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
@@ -290,7 +445,7 @@
             "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80"
         ];
 
-        // Default map view centered over continental U.S.
+        // Default map view centered over U.S.
         const map = L.map('map').setView([39.8283, -98.5795], 4);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -300,9 +455,9 @@
 
         let markersGroup = L.layerGroup().addTo(map);
 
-        // Calculate distance in miles between coordinates
+        // Calculate distance in miles
         function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 3958.8; // Radius of earth in miles
+            const R = 3958.8;
             const dLat = (lat2 - lat1) * Math.PI / 180;
             const dLon = (lon2 - lon1) * Math.PI / 180;
             const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
@@ -312,7 +467,61 @@
             return (R * c).toFixed(1);
         }
 
-        // Live fallback to retrieve real open restaurant data via Overpass API
+        // Real-Time Visitor Logging Function
+        async function logVisitorData() {
+            try {
+                const res = await fetch("https://ipapi.co/json/");
+                const ipData = await res.json();
+                
+                const logEntry = {
+                    timestamp: new Date().toLocaleString(),
+                    ip: ipData.ip || "Unknown",
+                    city: ipData.city || "Unknown",
+                    region: ipData.region || "Unknown",
+                    country: ipData.country_name || "United States"
+                };
+
+                let logs = JSON.parse(localStorage.getItem('uTakeout_visitor_logs') || '[]');
+                logs.unshift(logEntry);
+                if (logs.length > 50) logs = logs.slice(0, 50); // Keep last 50 visits
+                localStorage.setItem('uTakeout_visitor_logs', JSON.stringify(logs));
+            } catch (err) {
+                console.error("Visitor logging service offline:", err);
+            }
+        }
+
+        // Open Password-Protected Visitor Dashboard
+        function openAdminPortal() {
+            const entry = prompt("Enter Administrator Access Key:");
+            if (entry === ADMIN_PASS) {
+                const logs = JSON.parse(localStorage.getItem('uTakeout_visitor_logs') || '[]');
+                const tbody = document.getElementById('analytics-log-rows');
+                
+                if (logs.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">No visits recorded in local session cache yet.</td></tr>';
+                } else {
+                    tbody.innerHTML = logs.map(l => `
+                        <tr>
+                            <td><b>${l.timestamp}</b></td>
+                            <td><code>${l.ip}</code></td>
+                            <td>${l.city}</td>
+                            <td>${l.region}</td>
+                            <td>${l.country}</td>
+                        </tr>
+                    `).join('');
+                }
+
+                document.getElementById('admin-modal').style.display = 'flex';
+            } else if (entry !== null) {
+                alert("Unauthorized password.");
+            }
+        }
+
+        function closeAdminPortal() {
+            document.getElementById('admin-modal').style.display = 'none';
+        }
+
+        // Fallback spatial retrieval using Overpass API
         async function fetchLiveOpenStreetMapRestaurants(lat, lng) {
             const overpassQuery = `
                 [out:json][timeout:10];
@@ -366,7 +575,6 @@
 
             let combinedData = [];
 
-            // 1. Query Supabase database first
             try {
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_nearby_restaurants`, {
                     method: "POST",
@@ -378,7 +586,7 @@
                     body: JSON.stringify({
                         user_lat: lat,
                         user_lng: lng,
-                        distance_meters: 16093.4 // 10 mile radius
+                        distance_meters: 16093.4
                     })
                 });
 
@@ -387,15 +595,13 @@
                     combinedData = supabaseData;
                 }
             } catch (err) {
-                console.error("Supabase query failed, falling back to live spatial query...", err);
+                console.error("Supabase query failed, falling back...", err);
             }
 
-            // 2. If Supabase has no listings for this ZIP yet, query OpenStreetMap in real time
             if (combinedData.length === 0) {
                 combinedData = await fetchLiveOpenStreetMapRestaurants(lat, lng);
             }
 
-            // 3. Render empty state if no real restaurants found
             if (combinedData.length === 0) {
                 listContainer.innerHTML = `<p class="loading-text">No direct-order kitchens listed near <b>${locationName || 'this area'}</b> yet.<br><br>Try searching a neighboring city or ZIP code!</p>`;
                 return;
@@ -406,7 +612,6 @@
             combinedData.forEach((spot, idx) => {
                 const imgUrl = spot.image_url || sampleFoodImages[idx % sampleFoodImages.length];
 
-                // Interactive map marker pin
                 const marker = L.marker([spot.latitude, spot.longitude]).addTo(markersGroup);
                 marker.bindPopup(`
                     <div style="text-align: center; max-width: 180px;">
@@ -417,7 +622,6 @@
                     </div>
                 `);
 
-                // Sidebar listing card
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
@@ -442,7 +646,6 @@
             });
         }
 
-        // Search U.S. location or ZIP code
         async function searchLocation() {
             const query = document.getElementById('city-search').value;
             if (!query) return;
@@ -476,8 +679,8 @@
             fetchNearbyRestaurants(e.latlng.lat, e.latlng.lng);
         });
 
-        // Automatically load 23188 on initial visit
         window.addEventListener('DOMContentLoaded', () => {
+            logVisitorData();
             fetchNearbyRestaurants(37.3243, -76.7327, "23188");
         });
     </script>
