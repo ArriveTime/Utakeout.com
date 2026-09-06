@@ -10,117 +10,272 @@
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        body { display: flex; flex-direction: column; height: 100vh; background-color: #f8fafc; color: #0f172a; }
+        body { display: flex; flex-direction: column; min-height: 100vh; background-color: #f8fafc; color: #0f172a; }
         
-        /* Expanded Header Banner */
+        /* Expanded Hero Banner Area */
         header { 
-            background: #0f172a; 
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
             color: #ffffff; 
-            padding: 16px 36px; 
+            padding: 48px 36px 40px 36px; 
             display: flex; 
-            justify-content: space-between; 
+            flex-direction: column;
             align-items: center; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.25); 
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15); 
             z-index: 20; 
-            flex-wrap: wrap; 
-            gap: 16px;
-            border-bottom: 1px solid #1e293b;
-        }
-        
-        .logo-group { display: flex; align-items: center; gap: 16px; }
-        .logo-title { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(90deg, #38bdf8, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .slogan { 
-            background: rgba(52, 211, 153, 0.12); 
-            color: #34d399; 
-            font-size: 13px; 
-            font-weight: 700; 
-            padding: 6px 14px; 
-            border-radius: 20px; 
-            border: 1px solid rgba(52, 211, 153, 0.3);
-            letter-spacing: 0.3px;
+            border-bottom: 1px solid #334155;
+            position: relative;
         }
 
-        /* Search Bar Setup */
-        .search-container { display: flex; gap: 10px; flex: 1; max-width: 520px; }
+        .header-content {
+            max-width: 800px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .logo-title { 
+            font-size: 42px; 
+            font-weight: 900; 
+            letter-spacing: -1px; 
+            background: linear-gradient(90deg, #38bdf8, #34d399); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            line-height: 1.1;
+        }
+
+        .slogan-badge { 
+            background: rgba(52, 211, 153, 0.15); 
+            color: #34d399; 
+            font-size: 15px; 
+            font-weight: 700; 
+            padding: 8px 18px; 
+            border-radius: 30px; 
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            color: #94a3b8;
+            max-width: 600px;
+            line-height: 1.5;
+            margin-top: 4px;
+        }
+
+        /* Large Search Bar Container */
+        .search-container { 
+            display: flex; 
+            gap: 12px; 
+            width: 100%; 
+            max-width: 620px; 
+            margin-top: 12px;
+        }
+        
         .search-input { 
             flex: 1; 
-            padding: 12px 16px; 
-            border-radius: 8px; 
-            border: 1px solid #334155; 
+            padding: 16px 20px; 
+            border-radius: 10px; 
+            border: 1px solid #475569; 
             background: #1e293b; 
-            color: #fff; 
-            font-size: 14px; 
+            color: #ffffff; 
+            font-size: 16px; 
             outline: none; 
             transition: all 0.2s ease; 
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
         }
-        .search-input:focus { border-color: #38bdf8; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
+        
+        .search-input:focus { 
+            border-color: #38bdf8; 
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25); 
+        }
+        
         .search-input::placeholder { color: #94a3b8; }
+        
         .search-btn { 
             background: #2563eb; 
-            color: #fff; 
+            color: #ffffff; 
             border: none; 
-            padding: 12px 22px; 
-            border-radius: 8px; 
+            padding: 16px 28px; 
+            border-radius: 10px; 
             font-weight: 700; 
             cursor: pointer; 
-            font-size: 14px; 
+            font-size: 16px; 
             transition: background 0.2s ease; 
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
+        
         .search-btn:hover { background: #1d4ed8; }
 
-        /* Main Workspace Layout */
-        #main-container { display: flex; flex: 1; overflow: hidden; position: relative; }
-        #sidebar { width: 420px; background: #ffffff; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; z-index: 10; box-shadow: 4px 0 12px rgba(0,0,0,0.03); }
-        #sidebar-header { padding: 20px 24px; border-bottom: 1px solid #e2e8f0; background: #f8fafc; }
-        #sidebar-header h2 { font-size: 17px; font-weight: 700; color: #0f172a; }
-        #sidebar-header p { font-size: 13px; color: #64748b; margin-top: 4px; }
-        #restaurant-list { flex: 1; overflow-y: auto; padding: 20px; background: #f1f5f9; }
+        /* Feature Pillars */
+        .header-features {
+            display: flex;
+            gap: 24px;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Main App Container */
+        #main-container { 
+            display: flex; 
+            flex: 1; 
+            height: calc(100vh - 320px); 
+            min-height: 500px;
+            overflow: hidden; 
+            position: relative; 
+        }
+
+        #sidebar { 
+            width: 420px; 
+            background: #ffffff; 
+            border-right: 1px solid #e2e8f0; 
+            display: flex; 
+            flex-direction: column; 
+            z-index: 10; 
+            box-shadow: 4px 0 12px rgba(0,0,0,0.03); 
+        }
+
+        #sidebar-header { 
+            padding: 20px 24px; 
+            border-bottom: 1px solid #e2e8f0; 
+            background: #f8fafc; 
+        }
+
+        #sidebar-header h2 { font-size: 18px; font-weight: 700; color: #0f172a; }
+        #sidebar-header p { font-size: 13px; color: #64748b; margin-top: 4px; line-height: 1.4; }
+
+        #restaurant-list { 
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 20px; 
+            background: #f1f5f9; 
+        }
+
         #map { flex: 1; height: 100%; }
 
-        /* Restaurant Cards */
-        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; margin-bottom: 18px; box-shadow: 0 2px 4px rgba(0,0,0,0.04); transition: transform 0.2s ease, box-shadow 0.2s ease; }
-        .card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-color: #cbd5e1; }
-        .card-img-wrapper { position: relative; height: 150px; width: 100%; overflow: hidden; background: #e2e8f0; }
+        /* Cards */
+        .card { 
+            background: #ffffff; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            margin-bottom: 18px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04); 
+            transition: transform 0.2s ease, box-shadow 0.2s ease; 
+        }
+
+        .card:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08); 
+            border-color: #cbd5e1; 
+        }
+
+        .card-img-wrapper { 
+            position: relative; 
+            height: 150px; 
+            width: 100%; 
+            overflow: hidden; 
+            background: #e2e8f0; 
+        }
+
         .card-img { width: 100%; height: 100%; object-fit: cover; }
-        .card-badge { position: absolute; top: 12px; left: 12px; background: #10b981; color: #ffffff; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+
+        .card-badge { 
+            position: absolute; 
+            top: 12px; 
+            left: 12px; 
+            background: #10b981; 
+            color: #ffffff; 
+            font-size: 11px; 
+            font-weight: 800; 
+            padding: 4px 10px; 
+            border-radius: 6px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+        }
+
         .card-body { padding: 16px 18px; }
         .card-title { font-size: 17px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
         .card-category { font-size: 12px; color: #64748b; margin-bottom: 12px; display: flex; justify-content: space-between; }
         .card-meta { display: flex; gap: 12px; font-size: 12px; color: #334155; margin-bottom: 16px; background: #f8fafc; padding: 10px 12px; border-radius: 8px; font-weight: 600; border: 1px solid #f1f5f9; }
-        .btn-order { display: block; background: #2563eb; color: #ffffff; text-decoration: none; text-align: center; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 700; transition: background 0.2s ease; }
+
+        .btn-order { 
+            display: block; 
+            background: #2563eb; 
+            color: #ffffff; 
+            text-decoration: none; 
+            text-align: center; 
+            padding: 12px; 
+            border-radius: 8px; 
+            font-size: 14px; 
+            font-weight: 700; 
+            transition: background 0.2s ease; 
+        }
+
         .btn-order:hover { background: #1d4ed8; }
 
-        .loading-text { font-size: 13px; color: #64748b; text-align: center; margin-top: 28px; padding: 0 20px; line-height: 1.5; }
+        .loading-text { 
+            font-size: 14px; 
+            color: #64748b; 
+            text-align: center; 
+            margin-top: 36px; 
+            padding: 0 24px; 
+            line-height: 1.6; 
+        }
 
-        @media (max-width: 768px) {
-            header { padding: 16px 20px; }
-            #main-container { flex-direction: column-reverse; }
-            #sidebar { width: 100%; height: 50vh; }
-            #map { height: 50vh; }
+        @media (max-width: 868px) {
+            header { padding: 28px 20px; }
+            .logo-title { font-size: 32px; }
+            .header-features { flex-direction: column; gap: 8px; }
+            #main-container { flex-direction: column-reverse; height: auto; }
+            #sidebar { width: 100%; height: 450px; }
+            #map { width: 100%; height: 350px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Professional Hero Banner Header -->
     <header>
-        <div class="logo-group">
+        <div class="header-content">
             <h1 class="logo-title">uTakeout.com</h1>
-            <span class="slogan">Get Food-Skip the fees</span>
-        </div>
-        <div class="search-container">
-            <input type="text" id="city-search" class="search-input" placeholder="Enter City, State, or U.S. ZIP (e.g. 90210 or Austin, TX)">
-            <button onclick="searchLocation()" class="search-btn">Search</button>
+            <span class="slogan-badge">Get Food — Skip the fees</span>
+            <p class="hero-subtitle">Order directly from local independent kitchens and save up to 30% by bypassing third-party delivery markups and service charges.</p>
+            
+            <div class="search-container">
+                <input type="text" id="city-search" class="search-input" placeholder="Enter City, State, or U.S. ZIP (e.g. 23185 or Austin, TX)">
+                <button onclick="searchLocation()" class="search-btn">Find Food</button>
+            </div>
+
+            <div class="header-features">
+                <div class="feature-item">✓ 100% Direct Restaurant Portals</div>
+                <div class="feature-item">✓ $0 Service Fees</div>
+                <div class="feature-item">✓ Direct Pricing Guarantee</div>
+            </div>
         </div>
     </header>
 
+    <!-- Main Map & Directory Workspace -->
     <div id="main-container">
         <div id="sidebar">
             <div id="sidebar-header">
                 <h2 id="current-location-title">Direct-Order Kitchens</h2>
-                <p>Enter any U.S. city/ZIP above or click the map to access direct, commission-free restaurant portals.</p>
+                <p>Search your city or ZIP code above, or click anywhere on the map to discover direct takeout options nearby.</p>
             </div>
             <div id="restaurant-list">
-                <p class="loading-text">Use the search bar above to locate direct-order spots across the United States.</p>
+                <p class="loading-text">Enter a location in the search bar above to load local kitchen portals from the database.</p>
             </div>
         </div>
         <div id="map"></div>
@@ -133,14 +288,14 @@
         const SUPABASE_URL = "https://lagieqygqqusbfqvywam.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_yWIMlx1ju0IEPzFPLBjMaA_nZQlYp0A";
 
-        // High-resolution food imagery placeholders
+        // Food photography placeholders for database items lacking individual images
         const sampleFoodImages = [
             "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
             "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
             "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80"
         ];
 
-        // Default map view centered on U.S.
+        // Default map view centered across continental United States
         const map = L.map('map').setView([39.8283, -98.5795], 4);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -150,10 +305,10 @@
 
         let markersGroup = L.layerGroup().addTo(map);
 
-        // Fetch live spots from Supabase or load realistic simulated local spots
+        // Retrieve genuine database entries for searched coordinates
         async function fetchNearbyRestaurants(lat, lng, locationName = "") {
             const listContainer = document.getElementById('restaurant-list');
-            listContainer.innerHTML = '<p class="loading-text">Searching spatial database for commission-free kitchens...</p>';
+            listContainer.innerHTML = '<p class="loading-text">Searching spatial database for direct-order kitchens...</p>';
             markersGroup.clearLayers();
 
             if (locationName) {
@@ -175,58 +330,31 @@
                     })
                 });
 
-                let data = await response.json();
+                const data = await response.json();
 
-                // If region has no database records yet, render realistic spots with valid direct links
+                // If no real records exist for this location in Supabase yet
                 if (!data || data.length === 0) {
-                    data = [
-                        { 
-                            name: locationName ? `${locationName} Grill & Tap` : "Food For Thought", 
-                            direct_order_url: "https://www.foodforthoughtrestaurant.com", 
-                            latitude: lat + 0.008, 
-                            longitude: lng + 0.008, 
-                            distance_miles: 0.6, 
-                            travel_score: 4.9, 
-                            category: "American / Takeout" 
-                        },
-                        { 
-                            name: "Second Street American Bistro", 
-                            direct_order_url: "https://www.secondstreetbistro.com", 
-                            latitude: lat - 0.006, 
-                            longitude: lng - 0.005, 
-                            distance_miles: 1.2, 
-                            travel_score: 4.8, 
-                            category: "Bistro / American" 
-                        },
-                        { 
-                            name: "Amber Ox Public House", 
-                            direct_order_url: "https://www.amberox.com", 
-                            latitude: lat + 0.012, 
-                            longitude: lng - 0.009, 
-                            distance_miles: 1.8, 
-                            travel_score: 4.7, 
-                            category: "Craft Kitchen" 
-                        }
-                    ];
+                    listContainer.innerHTML = `<p class="loading-text">No direct-order kitchens listed in <b>${locationName || 'this area'}</b> yet.<br><br>Check back soon as new restaurants are added to our direct network!</p>`;
+                    return;
                 }
 
                 listContainer.innerHTML = "";
 
                 data.forEach((spot, idx) => {
-                    const imgUrl = sampleFoodImages[idx % sampleFoodImages.length];
+                    const imgUrl = spot.image_url || sampleFoodImages[idx % sampleFoodImages.length];
 
-                    // Interactive Map Marker with direct popup link
+                    // Interactive Map Pin Popup with explicit external link target
                     const marker = L.marker([spot.latitude, spot.longitude]).addTo(markersGroup);
                     marker.bindPopup(`
                         <div style="text-align: center; max-width: 180px;">
                             <img src="${imgUrl}" style="width:100%; height:80px; object-fit:cover; border-radius:6px; margin-bottom:6px;">
                             <b style="font-size:13px;">${spot.name}</b><br>
-                            <span style="color:#10b981; font-size:11px; font-weight:bold;">$0 App Markup</span><br><br>
+                            <span style="color:#10b981; font-size:11px; font-weight:bold;">$0 App Fees</span><br><br>
                             <a href="${spot.direct_order_url}" target="_blank" rel="noopener noreferrer" style="background:#2563eb; color:#fff; padding:6px 12px; border-radius:6px; text-decoration:none; font-size:12px; font-weight:bold; display:inline-block;">Order Direct</a>
                         </div>
                     `);
 
-                    // Sidebar Card with target="_blank" so links open cleanly in a new tab
+                    // Sidebar Card with target="_blank" to ensure opening in a new browser tab
                     const card = document.createElement('div');
                     card.className = 'card';
                     card.innerHTML = `
@@ -241,7 +369,7 @@
                                 <span>Direct Portal</span>
                             </div>
                             <div class="card-meta">
-                                <span>📍 ${spot.distance_miles} mi</span>
+                                <span>📍 ${spot.distance_miles ? spot.distance_miles + ' mi' : 'Nearby'}</span>
                                 <span>⭐ Travel Score: ${spot.travel_score || '4.9'}</span>
                             </div>
                             <a href="${spot.direct_order_url}" target="_blank" rel="noopener noreferrer" class="btn-order">Order Direct (Skip App Fees)</a>
@@ -256,7 +384,7 @@
             }
         }
 
-        // City & ZIP search restricted strictly to U.S. addresses
+        // Restrict geocoding search to U.S. addresses
         async function searchLocation() {
             const query = document.getElementById('city-search').value;
             if (!query) return;
