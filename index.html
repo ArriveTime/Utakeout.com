@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>uTakeout.com - Order Direct & Save</title>
+
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { display: flex; flex-direction: column; height: 100vh; background-color: #f3f4f6; }
+        header { background: #111827; color: #ffffff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+        header span { font-size: 13px; color: #10b981; font-weight: 600; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 20px; }
+        #main-container { display: flex; flex: 1; overflow: hidden; }
+        #sidebar { width: 380px; background: #ffffff; border-right: 1px solid #e5e7eb; display: flex; flex-direction: column; z-index: 10; }
+        #sidebar-header { padding: 16px; border-bottom: 1px solid #e5e7eb; background: #fafafa; }
+        #sidebar-header h2 { font-size: 16px; color: #1f2937; }
+        #sidebar-header p { font-size: 12px; color: #6b7280; margin-top: 4px; }
+        #restaurant-list { flex: 1; overflow-y: auto; padding: 16px; }
+        #map { flex: 1; height: 100%; }
+        .card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: transform 0.15s ease; }
+        .card:hover { transform: translateY(-2px); border-color: #d1d5db; }
+        .card h3 { font-size: 16px; color: #111827; margin-bottom: 6px; }
+        .card .address { font-size: 12px; color: #6b7280; margin-bottom: 10px; }
+        .card .details { display: flex; gap: 12px; font-size: 12px; color: #374151; margin-bottom: 12px; background: #f9fafb; padding: 8px; border-radius: 6px; }
+        .card .btn { display: block; background: #2563eb; color: #ffffff; text-decoration: none; text-align: center; padding: 10px; border-radius: 6px; font-size: 13px; font-weight: 600; }
+        .card .btn:hover { background: #1d4ed8; }
+        .badge { display: inline-block; background: #dcfce7; color: #15803d; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; text-transform: uppercase; }
+        .loading-text { font-size: 13px; color: #6b7280; text-align: center; margin-top: 20px; }
+        @media (max-width: 768px) {
+            #main-container { flex-direction: column-reverse; }
+            #sidebar { width: 100%; height: 50vh; }
+            #map { height: 50vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>uTakeout.com</h1>
+        <span>Zero App Fees</span>
+    </header>
+
+    <div id="main-container">
+        <div id="sidebar">
+            <div id="sidebar-header">
+                <h2>Direct Ordering Kitchens</h2>
+                <p>Click anywhere on the map to search nearby restaurants.</p>
+            </div>
+            <div id="restaurant-list">
+                <p class="loading-text">Loading nearby restaurants...</p>
+            </div>
+        </div>
+        <div id="map"></div>
+    </div>
+
+    <!-- Leaflet JS Engine -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // YOUR CONNECTED SUPABASE CREDENTIALS
+        const SUPABASE_URL = "https://lagieqygqqusbfqvywam.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_yWIMlx1ju0IEPzFPLBjMaA_nZQlYp0A";
+
+        // Initialize Map centered on Williamsburg, VA Area
+        const map = L.map('map').setView([37.2707, -76.7075], 12);
+
+        // OpenStreetMap Layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        let markersGroup = L.layerGroup().addTo(map);
+
+        // Function to Query Supabase PostGIS Database
+        async function fetchNearbyRestaurants(lat, lng) {
+            const listContainer = document.getElementById('restaurant-list');
+            listContainer.innerHTML = '<p class="loading-text">Searching database...</p>';
+            markersGroup.clearLayers();
+
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_nearby_restaurants`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "apikey": SUPABASE_ANON_KEY,
+                        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
+                    },
+                    body: JSON.stringify({
+                        user_lat: lat,
+                        user_lng: lng,
+                        distance_meters: 16093.4 // 10 mile search radius
+                    })
+                });
+
+                const data = await response.json();
+                listContainer.innerHTML = "";
+
+                if (!data || data.length === 0) {
+                    listContainer.innerHTML = '<p class="loading-text">No direct-order spots found within 10 miles of this point.</p>';
+                    return;
+                }
+
+                data.forEach(spot => {
+                    // Drop Marker on Interactive Map
+                    const marker = L.marker([spot.latitude, spot.longitude]).addTo(markersGroup);
+                    marker.bindPopup(`
+                        <div style="text-align: center;">
+                            <b>${spot.name}</b><br>
+                            <span style="color:#15803d; font-size:11px;">$0 Delivery Fees</span><br><br>
+                            <a href="${spot.direct_order_url}" target="_blank" style="background:#2563eb; color:#fff; padding:5px 10px; border-radius:4px; text-decoration:none; font-size:12px;">Order Direct</a>
+                        </div>
+                    `);
+
+                    // Render Restaurant Card in Sidebar
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <span class="badge">Direct Price Match</span>
+                        <h3>${spot.name}</h3>
+                        <p class="details">
+                            <span>📍 ${spot.distance_miles} miles away</span>
+                            <span>⭐ Travel Score: ${spot.travel_score || '5.0'}</span>
+                        </p>
+                        <a href="${spot.direct_order_url}" target="_blank" class="btn">Order Direct (Skip App Fees)</a>
+                    `;
+                    listContainer.appendChild(card);
+                });
+
+            } catch (err) {
+                console.error("Supabase Connection Error:", err);
+                listContainer.innerHTML = '<p class="loading-text">Unable to load listings. Check API configuration.</p>';
+            }
+        }
+
+        // Trigger Spatial Search when User Clicks the Map
+        map.on('click', function(e) {
+            fetchNearbyRestaurants(e.latlng.lat, e.latlng.lng);
+        });
+
+        // Initial Search around Williamsburg Center on First Load
+        fetchNearbyRestaurants(37.2707, -76.7075);
+    </script>
+</body>
+</html>
